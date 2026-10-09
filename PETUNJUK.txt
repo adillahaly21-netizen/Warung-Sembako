@@ -1,0 +1,21 @@
+KASIR SEMBAKO OFFLINE - PETUNJUK SINGKAT
+
+FILE:
+- index.html: aplikasi
+- manifest.json: identitas aplikasi web
+- sw.js: menyimpan file agar bisa dibuka offline setelah pertama kali online
+- icon.svg: ikon aplikasi
+
+CARA PAKAI:
+1. Unggah SEMUA file ini ke folder root (/) repository GitHub.
+2. Pastikan index.html berada langsung di root, bukan di dalam folder lain.
+3. Aktifkan GitHub Pages dari Settings > Pages > Deploy from a branch > main > /(root) > Save.
+4. Buka alamat Pages dengan https:// saat internet tersedia dan tunggu hingga aplikasi terbuka.
+5. Di Chrome Android, menu ⋮ > Tambahkan ke layar utama / Install app.
+6. Buka sekali saat online agar file tersimpan. Setelah itu coba mode pesawat.
+7. Data barang dan transaksi tersimpan di browser HP ini. Gunakan menu Cadangan untuk mengunduh file JSON secara rutin.
+
+CATATAN:
+- Jangan hapus data situs/browser karena data lokal bisa hilang.
+- Gunakan HTTPS GitHub Pages untuk service worker/offline.
+- Jangan unggah file cadangan JSON ke repository publik karena berisi data usaha.

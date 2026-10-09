@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#166534">
+<meta name="description" content="Kasir sembako offline dengan stok barang dan laporan penjualan.">
+<link rel="manifest" href="./manifest.json">
+<title>Kasir Sembako</title>
+<style>
+:root{--green:#166534;--green2:#15803d;--bg:#f3f6f3;--card:#fff;--ink:#17231a;--muted:#647067;--line:#dfe7e0;--red:#b91c1c;--amber:#a16207}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif}header{background:var(--green);color:#fff;padding:18px 16px 14px;position:sticky;top:0;z-index:3;box-shadow:0 2px 8px #0001}header h1{font-size:21px;margin:0}header p{margin:4px 0 0;font-size:12px;opacity:.9}.wrap{max-width:900px;margin:auto;padding:14px 12px 90px}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 14px}.tab{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 3px;font-size:12px;font-weight:700;color:#3d4b40}.tab.active{background:var(--green);color:#fff;border-color:var(--green)}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 7px #00000005}.card h2{font-size:17px;margin:0 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}.field.full{grid-column:1/-1}label{font-size:12px;font-weight:700;color:var(--muted)}input,select,textarea{width:100%;padding:11px;border:1px solid #ccd7ce;border-radius:10px;font:inherit;background:white;color:var(--ink);min-width:0}button{border:0;border-radius:10px;padding:11px 13px;font:700 14px system-ui;cursor:pointer}.primary{background:var(--green);color:#fff}.secondary{background:#e7f2e9;color:var(--green)}.danger{background:#fee2e2;color:var(--red)}.small{padding:7px 9px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.muted{color:var(--muted);font-size:12px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:12px}.stat{padding:13px;background:#fff;border:1px solid var(--line);border-radius:14px}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:19px;margin-top:4px;overflow-wrap:anywhere}.item{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item-main{min-width:0;flex:1}.item-main strong{display:block;overflow-wrap:anywhere}.item-main small{display:block;color:var(--muted);margin-top:3px}.item-actions{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.pill{display:inline-block;border-radius:999px;padding:3px 7px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534}.pill.low{background:#fef3c7;color:#92400e}.empty{text-align:center;padding:22px;color:var(--muted)}.qty{width:76px;padding:8px}.cartrow{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}.total{font-size:23px;font-weight:800}.hidden{display:none!important}.notice{padding:10px;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:12px;margin-bottom:12px}.search{margin-bottom:10px}.right{text-align:right}.receipt{white-space:pre-wrap;font-family:monospace;background:#f8faf8;padding:12px;border-radius:10px;font-size:12px}.foot{font-size:11px;color:var(--muted);text-align:center;margin:20px 0}.sale-line{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:5px 0}.sale-line span:last-child{text-align:right;font-weight:700}@media(min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}.tabs{max-width:600px}.wrap{padding-top:20px}}
+</style>
+</head>
+<body>
+<header><h1>🛒 Kasir Sembako</h1><p>Kasir • Stok barang • Laporan — bisa digunakan offline</p></header>
+<main class="wrap">
+<div id="offlineNote" class="notice">Pertama kali, buka website saat internet tersedia agar aplikasi tersimpan untuk penggunaan offline.</div>
+<nav class="tabs">
+<button class="tab active" data-tab="kasir">🧾 Kasir</button>
+<button class="tab" data-tab="barang">📦 Barang</button>
+<button class="tab" data-tab="laporan">📊 Laporan</button>
+<button class="tab" data-tab="cadangan">💾 Cadangan</button>
+</nav>
+<section id="kasir" class="panel active">
+<div class="stats">
+<div class="stat"><span>Omzet hari ini</span><strong id="todayRevenue">Rp0</strong></div>
+<div class="stat"><span>Transaksi hari ini</span><strong id="todayCount">0</strong></div>
+</div>
+<div class="card"><h2>Tambah ke keranjang</h2>
+<div class="field"><label for="sellSearch">Cari barang</label><input id="sellSearch" class="search" placeholder="Contoh: beras, minyak, gula"></div>
+<div id="sellProducts"></div>
+</div>
+<div class="card"><h2>Keranjang belanja</h2><div id="cart"></div>
+<div class="field"><label for="paid">Uang dibayar (Rp)</label><input id="paid" type="number" min="0" inputmode="numeric" placeholder="Masukkan uang dari pembeli"></div>
+<div class="sale-line"><span>Total belanja</span><span id="cartTotal">Rp0</span></div>
+<div class="sale-line"><span>Kembalian</span><span id="change">Rp0</span></div>
+<button id="checkout" class="primary" style="width:100%;margin-top:10px">Selesaikan penjualan</button>
+</div>
+<div id="lastReceipt" class="card hidden"><h2>Struk terakhir</h2><div id="receiptText" class="receipt"></div><button id="printReceipt" class="secondary" style="margin-top:8px">Cetak / Simpan PDF</button></div>
+</section>
+<section id="barang" class="panel">
+<div class="card"><h2 id="formTitle">Tambah barang</h2>
+<form id="productForm"><input type="hidden" id="productId">
+<div class="grid">
+<div class="field full"><label for="pName">Nama barang *</label><input id="pName" required maxlength="80" placeholder="Contoh: Beras Ramos 5 kg"></div>
+<div class="field"><label for="pBuy">Harga modal (Rp) *</label><input id="pBuy" required type="number" min="0" inputmode="numeric" placeholder="65000"></div>
+<div class="field"><label for="pSell">Harga jual (Rp) *</label><input id="pSell" required type="number" min="0" inputmode="numeric" placeholder="70000"></div>
+<div class="field"><label for="pStock">Stok saat ini *</label><input id="pStock" required type="number" min="0" step="any" inputmode="decimal" placeholder="10"></div>
+<div class="field"><label for="pMin">Peringatan stok minimum</label><input id="pMin" type="number" min="0" step="any" inputmode="decimal" value="3"></div>
+</div>
+<div class="actions"><button class="primary" type="submit">Simpan barang</button><button class="secondary" id="cancelEdit" type="button">Kosongkan</button></div>
+</form></div>
+<div class="card"><h2>Daftar stok</h2><div class="field"><label for="stockSearch">Cari barang</label><input id="stockSearch" placeholder="Cari nama barang"></div><div id="stockList"></div></div>
+</section>
+<section id="laporan" class="panel">
+<div class="stats">
+<div class="stat"><span>Omzet hari ini</span><strong id="rToday">Rp0</strong></div>
+<div class="stat"><span>Perkiraan laba hari ini</span><strong id="pToday">Rp0</strong></div>
+<div class="stat"><span>Total jenis barang</span><strong id="productCount">0</strong></div>
+<div class="stat"><span>Barang stok menipis</span><strong id="lowCount">0</strong></div>
+</div>
+<div class="card"><h2>Riwayat transaksi</h2><div class="field"><label for="reportDate">Pilih tanggal</label><input id="reportDate" type="date"></div><div id="reportSummary"></div><div id="salesList"></div></div>
+</section>
+<section id="cadangan" class="panel">
+<div class="card"><h2>Cadangkan data</h2><p class="muted">Simpan salinan barang dan transaksi ke file JSON. Lakukan rutin agar data aman jika browser terhapus atau HP berganti.</p><button id="exportData" class="primary">Unduh cadangan data</button></div>
+<div class="card"><h2>Pulihkan data</h2><p class="muted">Pilih file cadangan JSON yang pernah diunduh. Data saat ini akan diganti dengan data dari cadangan tersebut.</p><div class="field"><label for="importFile">File cadangan (.json)</label><input id="importFile" type="file" accept=".json,application/json"></div><button id="importData" class="secondary">Pulihkan dari file</button></div>
+<div class="card"><h2>Informasi penyimpanan</h2><p id="storageInfo" class="muted"></p><button id="clearData" class="danger">Hapus semua data</button></div>
+</section>
+<p class="foot">Kasir Sembako Offline • Data disimpan di browser HP ini</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+const dateKey=d=>{const x=d||new Date();return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+let products=[],sales=[],cart=[],lastReceipt='';
+function load(){try{products=JSON.parse(localStorage.getItem('ks_products')||'[]');sales=JSON.parse(localStorage.getItem('ks_sales')||'[]')}catch(e){products=[];sales=[]}}
+function save(){localStorage.setItem('ks_products',JSON.stringify(products));localStorage.setItem('ks_sales',JSON.stringify(sales));renderAll()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function switchTab(id){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+function renderSell(){const q=$('sellSearch').value.toLowerCase().trim();const list=products.filter(p=>p.name.toLowerCase().includes(q));$('sellProducts').innerHTML=list.length?list.map(p=>`<div class="item"><div class="item-main"><strong>${esc(p.name)}</strong><small>${money(p.sell)} • Stok: ${p.stock}</small></div><div class="item-actions"><button class="secondary small" ${p.stock<=0?'disabled':''} onclick="addCart('${p.id}')">+ Tambah</button></div></div>`).join(''):'<div class="empty">Belum ada barang. Tambahkan di menu Barang.</div>'}
+function addCart(id){const p=products.find(x=>x.id===id);if(!p||p.stock<=0)return alert('Stok barang habis.');const c=cart.find(x=>x.id===id);if(c){if(c.qty>=p.stock)return alert('Jumlah melebihi stok.');c.qty++}else cart.push({id,qty:1});renderCart()}
+function changeQty(id,val){const c=cart.find(x=>x.id===id),p=products.find(x=>x.id===id);if(!c||!p)return;const n=Number(val);if(!Number.isFinite(n)||n<=0){cart=cart.filter(x=>x.id!==id)}else if(n>p.stock){alert('Jumlah melebihi stok yang tersedia.');}else c.qty=n;renderCart()}
+function renderCart(){let total=0;$('cart').innerHTML=cart.length?cart.map(c=>{const p=products.find(x=>x.id===c.id);if(!p)return '';const sub=p.sell*c.qty;total+=sub;return `<div class="cartrow"><div><strong>${esc(p.name)}</strong><div class="muted">${money(p.sell)} × ${c.qty} = ${money(sub)}</div></div><div class="item-actions"><input class="qty" type="number" min="1" max="${p.stock}" value="${c.qty}" onchange="changeQty('${c.id}',this.value)"><button class="danger small" onclick="removeCart('${c.id}')">×</button></div></div>`}).join(''):'<div class="empty">Keranjang masih kosong.</div>';$('cartTotal').textContent=money(total);const paid=Number($('paid').value)||0;$('change').textContent=money(Math.max(0,paid-total));}
+function removeCart(id){cart=cart.filter(x=>x.id!==id);renderCart()}
+$('sellSearch').addEventListener('input',renderSell);$('paid').addEventListener('input',renderCart);
+$('productForm').addEventListener('submit',e=>{e.preventDefault();const id=$('productId').value;const item={id:id||uid(),name:$('pName').value.trim(),buy:Number($('pBuy').value),sell:Number($('pSell').value),stock:Number($('pStock').value),min:Number($('pMin').value)||0};if(!item.name)return;if(item.buy<0||item.sell<0||item.stock<0)return alert('Angka tidak boleh negatif.');if(id){products=products.map(p=>p.id===id?item:p)}else products.push(item);clearForm();save();alert('Barang berhasil disimpan.');});
+function clearForm(){$('productForm').reset();$('productId').value='';$('pMin').value=3;$('formTitle').textContent='Tambah barang'}
+$('cancelEdit').addEventListener('click',clearForm);
+function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$('productId').value=p.id;$('pName').value=p.name;$('pBuy').value=p.buy;$('pSell').value=p.sell;$('pStock').value=p.stock;$('pMin').value=p.min;$('formTitle').textContent='Edit barang';switchTab('barang');window.scrollTo({top:0,behavior:'smooth'})}
+function deleteProduct(id){if(cart.some(c=>c.id===id))return alert('Hapus barang dari keranjang dulu.');if(confirm('Hapus barang ini? Riwayat transaksi lama tetap ada.')){products=products.filter(p=>p.id!==id);save()}}
+function renderStock(){const q=$('stockSearch').value.toLowerCase().trim();const list=products.filter(p=>p.name.toLowerCase().includes(q));$('stockList').innerHTML=list.length?list.map(p=>`<div class="item"><div class="item-main"><strong>${esc(p.name)}</strong><small>Modal ${money(p.buy)} • Jual ${money(p.sell)}</small><small>Stok: <b>${p.stock}</b> ${p.stock<=p.min?'<span class="pill low">Stok menipis</span>':'<span class="pill">Aman</span>'}</small></div><div class="item-actions"><button class="secondary small" onclick="editProduct('${p.id}')">Edit</button><button class="danger small" onclick="deleteProduct('${p.id}')">Hapus</button></div></div>`).join(''):'<div class="empty">Belum ada barang. Gunakan formulir di atas.</div>'}
+$('stockSearch').addEventListener('input',renderStock);
+$('checkout').addEventListener('click',()=>{if(!cart.length)return alert('Keranjang masih kosong.');let total=0;for(const c of cart){const p=products.find(x=>x.id===c.id);if(!p||c.qty>p.stock)return alert('Stok berubah atau tidak cukup. Periksa keranjang.');total+=p.sell*c.qty}const paid=Number($('paid').value)||0;if(paid<total)return alert('Uang dibayar masih kurang.');const lines=cart.map(c=>{const p=products.find(x=>x.id===c.id);return {id:p.id,name:p.name,qty:c.qty,price:p.sell,buy:p.buy,subtotal:p.sell*c.qty}});const sale={id:uid(),date:new Date().toISOString(),day:dateKey(),items:lines,total,paid,change:paid-total,profit:lines.reduce((s,x)=>s+(x.price-x.buy)*x.qty,0)};lines.forEach(x=>{const p=products.find(p=>p.id===x.id);p.stock-=x.qty});sales.unshift(sale);lastReceipt=makeReceipt(sale);cart=[];$('paid').value='';save();renderCart();$('lastReceipt').classList.remove('hidden');$('receiptText').textContent=lastReceipt;alert('Penjualan tersimpan. Stok sudah diperbarui.')});
+function makeReceipt(s){return `TOKO SEMBAKO\n${new Date(s.date).toLocaleString('id-ID')}\n------------------------------\n${s.items.map(x=>`${x.name}\n ${x.qty} x ${money(x.price)} = ${money(x.subtotal)}`).join('\n')}\n------------------------------\nTOTAL     ${money(s.total)}\nDIBAYAR   ${money(s.paid)}\nKEMBALIAN ${money(s.change)}\n\nTerima kasih!`}
+$('printReceipt').addEventListener('click',()=>{const w=window.open('','_blank');if(!w){alert('Izinkan pop-up browser untuk mencetak struk.');return}w.document.write('<pre style="font:14px monospace;white-space:pre-wrap">'+esc(lastReceipt)+'</pre>');w.document.close();w.print()});
+$('reportDate').value=dateKey();$('reportDate').addEventListener('change',renderReports);
+function renderReports(){const day=$('reportDate').value||dateKey();const ds=sales.filter(s=>s.day===day);const omzet=ds.reduce((a,s)=>a+s.total,0),profit=ds.reduce((a,s)=>a+s.profit,0);$('todayRevenue').textContent=money(sales.filter(s=>s.day===dateKey()).reduce((a,s)=>a+s.total,0));$('todayCount').textContent=sales.filter(s=>s.day===dateKey()).length;$('rToday').textContent=money(sales.filter(s=>s.day===dateKey()).reduce((a,s)=>a+s.total,0));$('pToday').textContent=money(sales.filter(s=>s.day===dateKey()).reduce((a,s)=>a+s.profit,0));$('productCount').textContent=products.length;$('lowCount').textContent=products.filter(p=>p.stock<=p.min).length;$('reportSummary').innerHTML=`<div class="sale-line"><span>Omzet ${day}</span><span>${money(omzet)}</span></div><div class="sale-line"><span>Perkiraan laba kotor</span><span>${money(profit)}</span></div><div class="muted">Transaksi: ${ds.length}</div>`;$('salesList').innerHTML=ds.length?ds.map(s=>`<div class="item"><div class="item-main"><strong>${new Date(s.date).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})} • ${money(s.total)}</strong><small>${s.items.map(x=>`${esc(x.name)} × ${x.qty}`).join(', ')}</small><small>Perkiraan laba: ${money(s.profit)}</small></div><button class="secondary small" onclick="showSale('${s.id}')">Lihat struk</button></div>`).join(''):'<div class="empty">Tidak ada transaksi pada tanggal ini.</div>'}
+function showSale(id){const s=sales.find(x=>x.id===id);if(s){lastReceipt=makeReceipt(s);$('receiptText').textContent=lastReceipt;$('lastReceipt').classList.remove('hidden');switchTab('kasir')}}
+$('exportData').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({app:'Kasir Sembako Offline',version:1,exportedAt:new Date().toISOString(),products,sales},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='cadangan-kasir-sembako-'+dateKey()+'.json';a.click();URL.revokeObjectURL(a.href)});
+$('importData').addEventListener('click',async()=>{const f=$('importFile').files[0];if(!f)return alert('Pilih file cadangan terlebih dahulu.');try{const d=JSON.parse(await f.text());if(!Array.isArray(d.products)||!Array.isArray(d.sales))throw Error('format');if(!confirm('Data sekarang akan diganti. Lanjutkan?'))return;products=d.products;sales=d.sales;cart=[];save();alert('Cadangan berhasil dipulihkan.')}catch(e){alert('File cadangan tidak valid.')}});
+$('clearData').addEventListener('click',()=>{if(confirm('Yakin hapus SEMUA barang dan riwayat transaksi dari HP ini? Sebaiknya unduh cadangan terlebih dahulu.')){products=[];sales=[];cart=[];save();clearForm();alert('Semua data telah dihapus.')}});
+function renderAll(){renderSell();renderStock();renderCart();renderReports();$('storageInfo').textContent=`Tersimpan di browser perangkat ini. ${products.length} jenis barang dan ${sales.length} transaksi. Unduh cadangan secara rutin.`}
+load();renderAll();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){navigator.serviceWorker.register('./sw.js').then(()=>{$('offlineNote').classList.add('hidden')}).catch(()=>{})}
+</script>
+</body></html>

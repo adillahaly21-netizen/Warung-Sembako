@@ -1,0 +1,18 @@
+{
+  "name": "Kasir Sembako Offline",
+  "short_name": "Kasir Sembako",
+  "description": "Kasir sembako dan stok barang offline",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6f3",
+  "theme_color": "#166534",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
