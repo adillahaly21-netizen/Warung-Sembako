@@ -1,12 +1,13 @@
 {
-  "name": "Mushaf Pojok — Teman Ngaji",
-  "short_name": "Mushaf Pojok",
-  "description": "Prototipe Al-Qur'an Mushaf Pojok dengan absensi dan catatan offline.",
+  "name": "Barang Bawaanku",
+  "short_name": "Barangku",
+  "description": "Daftar barang bawaan pribadi yang bisa digunakan offline",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f8faf7",
-  "theme_color": "#145b45",
-  "lang": "id",
-  "icons": []
+  "background_color": "#f5f7f5",
+  "theme_color": "#123b32",
+  "icons": [
+    {"src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
 }
